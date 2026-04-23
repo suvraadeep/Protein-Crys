@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="760" height="400" viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#E8874A"/>
+    </marker>
+  </defs>
+  <rect width="760" height="400" fill="#FFF8F2" rx="12"/>
+  <text x="380" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#2C3E50">Salt Prediction Architecture</text>
+  <text x="380" y="52" text-anchor="middle" font-size="12" fill="#7F8C8D">Biology: Hofmeister series — kosmotropic ions drive salting-out crystallization</text>
+
+  <!-- Shared trunk (abbreviated) -->
+  <rect x="30" y="80" width="130" height="50" rx="8" fill="#D4EFDF" stroke="#27AE60" stroke-width="2"/>
+  <text x="95" y="101" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A8A4A">ESMBackbone</text>
+  <text x="95" y="118" text-anchor="middle" font-size="10" fill="#555">368-D → 128-D trunk</text>
+
+  <!-- Hofmeister features -->
+  <rect x="30" y="158" width="130" height="80" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="2"/>
+  <text x="95" y="177" text-anchor="middle" font-size="10" font-weight="bold" fill="#D68910">Hofmeister Injection</text>
+  <text x="95" y="194" text-anchor="middle" font-size="9" fill="#555">kosmotropic_score[31]</text>
+  <text x="95" y="210" text-anchor="middle" font-size="9" fill="#555">hofmeister_rank[32]</text>
+  <text x="95" y="226" text-anchor="middle" font-size="9" fill="#555">surface_exposed[36]</text>
+
+  <!-- Concat arrow -->
+  <line x1="160" y1="105" x2="230" y2="150" stroke="#E8874A" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="160" y1="198" x2="230" y2="170" stroke="#F39C12" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Salt head concat -->
+  <rect x="232" y="138" width="100" height="50" rx="8" fill="#FDF2E9" stroke="#E8874A" stroke-width="2"/>
+  <text x="282" y="159" text-anchor="middle" font-size="11" font-weight="bold" fill="#C0392B">cat</text>
+  <text x="282" y="176" text-anchor="middle" font-size="10" fill="#555">131-D</text>
+
+  <!-- ── BRANCH 1: Salt TYPE ── -->
+  <line x1="332" y1="155" x2="380" y2="120" stroke="#E8874A" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="380" y="84" width="130" height="74" rx="8" fill="#FDF2E9" stroke="#E8874A" stroke-width="2.5"/>
+  <text x="445" y="103" text-anchor="middle" font-size="11" font-weight="bold" fill="#C0392B">Salt TYPE Head</text>
+  <text x="445" y="120" text-anchor="middle" font-size="10" fill="#555">Linear(131→64)</text>
+  <text x="445" y="136" text-anchor="middle" font-size="10" fill="#555">GELU → Linear(64→K)</text>
+  <text x="445" y="152" text-anchor="middle" font-size="10" fill="#555">softmax → probabilities</text>
+
+  <rect x="535" y="90" width="110" height="62" rx="8" fill="#FFF3E0" stroke="#E8874A" stroke-width="1.5"/>
+  <text x="590" y="109" text-anchor="middle" font-size="10" font-weight="bold" fill="#E8874A">Soft-Vote Ensemble</text>
+  <text x="590" y="126" text-anchor="middle" font-size="10" fill="#555">DL + XGB + LGB</text>
+  <text x="590" y="142" text-anchor="middle" font-size="10" fill="#E8874A">→ salt type class</text>
+  <line x1="510" y1="121" x2="533" y2="121" stroke="#E8874A" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Type output -->
+  <rect x="660" y="95" width="90" height="46" rx="8" fill="#E8874A"/>
+  <text x="705" y="113" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Salt Type</text>
+  <text x="705" y="130" text-anchor="middle" font-size="9" fill="#FFF3E0">e.g. NH₄SO₄</text>
+  <line x1="645" y1="121" x2="658" y2="121" stroke="#E8874A" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ── BRANCH 2: Salt CONCENTRATION ── -->
+  <line x1="332" y1="165" x2="380" y2="230" stroke="#D35400" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- salt type one-hot injection -->
+  <text x="395" y="225" font-size="9" fill="#E74C3C">+ salt type one-hot</text>
+  <rect x="380" y="230" width="130" height="74" rx="8" fill="#FDEDEC" stroke="#C0392B" stroke-width="2.5"/>
+  <text x="445" y="250" text-anchor="middle" font-size="11" font-weight="bold" fill="#C0392B">Salt CONC Head</text>
+  <text x="445" y="267" text-anchor="middle" font-size="10" fill="#555">cat(131-D, one-hot)</text>
+  <text x="445" y="283" text-anchor="middle" font-size="10" fill="#555">Linear → 64 → 1</text>
+  <text x="445" y="299" text-anchor="middle" font-size="10" fill="#555">log1p transform</text>
+
+  <rect x="535" y="240" width="110" height="54" rx="8" fill="#FFF3E0" stroke="#C0392B" stroke-width="1.5"/>
+  <text x="590" y="260" text-anchor="middle" font-size="10" font-weight="bold" fill="#C0392B">Ridge Stack</text>
+  <text x="590" y="276" text-anchor="middle" font-size="10" fill="#555">DL + XGB + LGB</text>
+  <text x="590" y="290" text-anchor="middle" font-size="10" fill="#C0392B">→ log(conc)</text>
+  <line x1="510" y1="267" x2="533" y2="267" stroke="#C0392B" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Conc output -->
+  <rect x="660" y="246" width="90" height="46" rx="8" fill="#C0392B"/>
+  <text x="705" y="264" text-anchor="middle" font-size="10" font-weight="bold" fill="white">Salt Conc</text>
+  <text x="705" y="281" text-anchor="middle" font-size="9" fill="#FAD7A0">e.g. 1.8 M</text>
+  <line x1="645" y1="267" x2="658" y2="267" stroke="#C0392B" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Hofmeister series reference -->
+  <rect x="30" y="310" width="340" height="74" rx="8" fill="white" stroke="#BDC3C7" stroke-width="1"/>
+  <text x="50" y="330" font-size="10" font-weight="bold" fill="#444">Hofmeister series (most → least salting-out):</text>
+  <text x="50" y="347" font-size="10" fill="#666">SO₄²⁻ > HPO₄²⁻ > F⁻ > Cl⁻ > Br⁻ > I⁻ > SCN⁻</text>
+  <text x="50" y="364" font-size="10" fill="#666">Kosmotropic AAs: G, A, S, T, P, V, I, L</text>
+  <text x="50" y="381" font-size="10" fill="#888">High kosmotropic score → lower [salt] needed.</text>
+
+  <!-- IQR note -->
+  <rect x="390" y="330" width="200" height="50" rx="8" fill="white" stroke="#BDC3C7" stroke-width="1"/>
+  <text x="490" y="350" text-anchor="middle" font-size="10" font-weight="bold" fill="#444">Training detail</text>
+  <text x="490" y="366" text-anchor="middle" font-size="10" fill="#666">Per-salt IQR outlier removal</text>
+  <text x="490" y="382" text-anchor="middle" font-size="10" fill="#666">to handle heavy-tailed conc. dist.</text>
+</svg>

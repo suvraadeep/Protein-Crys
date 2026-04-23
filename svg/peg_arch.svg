@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="760" height="380" viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#27AE60"/>
+    </marker>
+  </defs>
+  <rect width="760" height="380" fill="#F2FBF5" rx="12"/>
+  <text x="380" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#2C3E50">PEG Type Classification Architecture</text>
+  <text x="380" y="52" text-anchor="middle" font-size="12" fill="#7F8C8D">Biology: excluded-volume depletion — PEG MW matched to protein Rg</text>
+
+  <!-- Trunk -->
+  <rect x="30" y="80" width="130" height="50" rx="8" fill="#D4EFDF" stroke="#27AE60" stroke-width="2"/>
+  <text x="95" y="101" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A8A4A">ESMBackbone</text>
+  <text x="95" y="118" text-anchor="middle" font-size="10" fill="#555">368-D → 128-D trunk</text>
+
+  <!-- Rg / MW injection -->
+  <rect x="30" y="158" width="130" height="68" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="2"/>
+  <text x="95" y="178" text-anchor="middle" font-size="10" font-weight="bold" fill="#D68910">Size Injection</text>
+  <text x="95" y="196" text-anchor="middle" font-size="9" fill="#555">predicted_Rg[28]</text>
+  <text x="95" y="212" text-anchor="middle" font-size="9" fill="#555">Flory: 2.2 × N^0.6 / 200</text>
+  <text x="95" y="226" text-anchor="middle" font-size="9" fill="#555">MW_norm[23]</text>
+
+  <!-- Concat -->
+  <line x1="160" y1="105" x2="225" y2="148" stroke="#27AE60" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="160" y1="192" x2="225" y2="165" stroke="#F39C12" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="225" y="140" width="100" height="44" rx="8" fill="#E8F8F5" stroke="#27AE60" stroke-width="2"/>
+  <text x="275" y="159" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A8A4A">cat</text>
+  <text x="275" y="176" text-anchor="middle" font-size="10" fill="#555">130-D</text>
+
+  <!-- PEG Head -->
+  <line x1="325" y1="162" x2="370" y2="162" stroke="#27AE60" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="370" y="124" width="140" height="76" rx="8" fill="#E8F8F5" stroke="#27AE60" stroke-width="2.5"/>
+  <text x="440" y="145" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A8A4A">PEG Head</text>
+  <text x="440" y="162" text-anchor="middle" font-size="10" fill="#555">Linear(130 → 64)</text>
+  <text x="440" y="178" text-anchor="middle" font-size="10" fill="#555">GELU → Linear(64 → K)</text>
+  <text x="440" y="194" text-anchor="middle" font-size="10" fill="#555">softmax(K classes)</text>
+
+  <!-- Ensemble -->
+  <rect x="535" y="136" width="115" height="56" rx="8" fill="#D4EFDF" stroke="#27AE60" stroke-width="1.5"/>
+  <text x="592" y="157" text-anchor="middle" font-size="10" font-weight="bold" fill="#1A8A4A">Soft-Vote Ensemble</text>
+  <text x="592" y="174" text-anchor="middle" font-size="10" fill="#555">DL + XGB + LGB</text>
+  <text x="592" y="188" text-anchor="middle" font-size="10" fill="#1A8A4A">→ PEG class probs</text>
+  <line x1="510" y1="162" x2="533" y2="162" stroke="#27AE60" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Output -->
+  <rect x="665" y="142" width="85" height="46" rx="8" fill="#27AE60"/>
+  <text x="707" y="161" text-anchor="middle" font-size="10" font-weight="bold" fill="white">PEG Type</text>
+  <text x="707" y="178" text-anchor="middle" font-size="9" fill="#A9DFBF">e.g. PEG_3350</text>
+  <line x1="650" y1="164" x2="663" y2="164" stroke="#27AE60" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- PEG classes table -->
+  <rect x="30" y="280" width="270" height="88" rx="8" fill="white" stroke="#BDC3C7" stroke-width="1"/>
+  <text x="50" y="300" font-size="10" font-weight="bold" fill="#444">PEG class mapping (MW → name):</text>
+  <text x="50" y="317" font-size="10" fill="#666">≤600:PEG_400 · 800-1500:PEG_1000 · 1500-2500:PEG_1500</text>
+  <text x="50" y="334" font-size="10" fill="#666">2500-4000:PEG_3350 · 4000-5000:PEG_4000</text>
+  <text x="50" y="351" font-size="10" fill="#666">5000-7000:PEG_6000 · &gt;7000:PEG_8000 · OTHER_PEG</text>
+  <text x="50" y="364" font-size="9" fill="#888">Class-balanced cross-entropy loss during DL training.</text>
+
+  <!-- Depletion theory box -->
+  <rect x="320" y="280" width="270" height="80" rx="8" fill="white" stroke="#BDC3C7" stroke-width="1"/>
+  <text x="340" y="300" font-size="10" font-weight="bold" fill="#444">Excluded-volume theory:</text>
+  <text x="340" y="317" font-size="10" fill="#666">PEG excluded from protein surface layer</text>
+  <text x="340" y="334" font-size="10" fill="#666">→ osmotic pressure drives crystal contacts</text>
+  <text x="340" y="351" font-size="10" fill="#666">Optimal: Rg(PEG) ≈ Rg(protein)</text>
+</svg>

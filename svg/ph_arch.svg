@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="760" height="380" viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#4C72B0"/>
+    </marker>
+  </defs>
+  <rect width="760" height="380" fill="#F4F8FF" rx="12"/>
+  <text x="380" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#2C3E50">pH Prediction Architecture</text>
+  <text x="380" y="52" text-anchor="middle" font-size="12" fill="#7F8C8D">Biology: proteins crystallize near their isoelectric point (pI)</text>
+
+  <!-- Input -->
+  <rect x="30" y="80" width="110" height="44" rx="8" fill="white" stroke="#4C72B0" stroke-width="2"/>
+  <text x="85" y="99" text-anchor="middle" font-size="11" font-weight="bold" fill="#4C72B0">Sequence</text>
+  <text x="85" y="116" text-anchor="middle" font-size="10" fill="#666">AA string</text>
+
+  <!-- ESM-2 -->
+  <rect x="175" y="68" width="120" height="68" rx="8" fill="#D4EFDF" stroke="#27AE60" stroke-width="2"/>
+  <text x="235" y="90" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A8A4A">ESM-2</text>
+  <text x="235" y="107" text-anchor="middle" font-size="10" fill="#555">6-layer transformer</text>
+  <text x="235" y="123" text-anchor="middle" font-size="10" fill="#555">mean-pool</text>
+  <text x="235" y="130" text-anchor="middle" font-size="10" fill="#27AE60">→ 320-D</text>
+  <line x1="140" y1="102" x2="173" y2="102" stroke="#4C72B0" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Bio features -->
+  <rect x="175" y="160" width="120" height="56" rx="8" fill="#FEF9E7" stroke="#F39C12" stroke-width="2"/>
+  <text x="235" y="180" text-anchor="middle" font-size="11" font-weight="bold" fill="#D68910">BioExtractor</text>
+  <text x="235" y="196" text-anchor="middle" font-size="10" fill="#555">pI, MW, GRAVY…</text>
+  <text x="235" y="212" text-anchor="middle" font-size="10" fill="#F39C12">→ 48-D</text>
+  <line x1="85" y1="124" x2="85" y2="188" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+  <line x1="85" y1="188" x2="173" y2="188" stroke="#F39C12" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Concat -->
+  <rect x="328" y="100" width="90" height="50" rx="8" fill="#EBF5FB" stroke="#2E86C1" stroke-width="2"/>
+  <text x="373" y="121" text-anchor="middle" font-size="11" font-weight="bold" fill="#2E86C1">concat</text>
+  <text x="373" y="139" text-anchor="middle" font-size="10" fill="#555">368-D</text>
+  <line x1="295" y1="106" x2="326" y2="118" stroke="#27AE60" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="295" y1="188" x2="328" y2="138" stroke="#F39C12" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ESMBackbone -->
+  <rect x="450" y="88" width="120" height="74" rx="8" fill="#D4EFDF" stroke="#27AE60" stroke-width="2"/>
+  <text x="510" y="108" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A8A4A">ESMBackbone</text>
+  <text x="510" y="125" text-anchor="middle" font-size="10" fill="#555">LayerNorm(368)</text>
+  <text x="510" y="141" text-anchor="middle" font-size="10" fill="#555">368→256 GELU</text>
+  <text x="510" y="157" text-anchor="middle" font-size="10" fill="#27AE60">256→128 → trunk</text>
+  <line x1="418" y1="125" x2="448" y2="125" stroke="#4C72B0" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- pI injection arrow -->
+  <text x="360" y="220" text-anchor="middle" font-size="10" fill="#E74C3C">pI_norm extracted</text>
+  <text x="360" y="234" text-anchor="middle" font-size="10" fill="#E74C3C">from index 342</text>
+  <line x1="373" y1="150" x2="373" y2="215" stroke="#E74C3C" stroke-width="1.5" stroke-dasharray="5"/>
+  <line x1="373" y1="215" x2="588" y2="215" stroke="#E74C3C" stroke-width="1.5"/>
+  <line x1="588" y1="215" x2="588" y2="185" stroke="#E74C3C" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- pH head -->
+  <rect x="450" y="185" width="130" height="80" rx="8" fill="#EBF5FB" stroke="#4C72B0" stroke-width="2.5"/>
+  <text x="515" y="205" text-anchor="middle" font-size="12" font-weight="bold" fill="#2C3E50">pH Head</text>
+  <text x="515" y="222" text-anchor="middle" font-size="10" fill="#555">cat(trunk[128], pI[1])</text>
+  <text x="515" y="238" text-anchor="middle" font-size="10" fill="#555">Linear(129 → 64)</text>
+  <text x="515" y="254" text-anchor="middle" font-size="10" fill="#555">GELU → Linear(64→1)</text>
+  <text x="515" y="260" text-anchor="middle" font-size="9" fill="#888">sigmoid × 14</text>
+  <line x1="510" y1="162" x2="510" y2="183" stroke="#4C72B0" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Ensemble box -->
+  <rect x="610" y="195" width="120" height="60" rx="8" fill="#F0F4FF" stroke="#4C72B0" stroke-width="1.5"/>
+  <text x="670" y="215" text-anchor="middle" font-size="10" font-weight="bold" fill="#4C72B0">Stacking Ensemble</text>
+  <text x="670" y="231" text-anchor="middle" font-size="10" fill="#555">DL + XGB + LGB</text>
+  <text x="670" y="247" text-anchor="middle" font-size="10" fill="#555">Ridge meta → pH</text>
+  <line x1="580" y1="225" x2="608" y2="225" stroke="#4C72B0" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Output -->
+  <rect x="600" y="290" width="140" height="44" rx="8" fill="#4C72B0" stroke="none"/>
+  <text x="670" y="308" text-anchor="middle" font-size="11" font-weight="bold" fill="white">pH ∈ [2.0, 12.0]</text>
+  <text x="670" y="326" text-anchor="middle" font-size="10" fill="#C8D8F8">e.g. 6.5 ± 0.4</text>
+  <line x1="670" y1="255" x2="670" y2="288" stroke="#4C72B0" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Biology note -->
+  <rect x="30" y="290" width="300" height="72" rx="8" fill="white" stroke="#BDC3C7" stroke-width="1"/>
+  <text x="50" y="310" font-size="10" font-weight="bold" fill="#444">Key biology: pI injection</text>
+  <text x="50" y="326" font-size="10" fill="#666">At pH ≈ pI, net charge = 0.</text>
+  <text x="50" y="342" font-size="10" fill="#666">Electrostatic repulsion minimal</text>
+  <text x="50" y="358" font-size="10" fill="#666">→ crystal packing favoured.</text>
+</svg>
